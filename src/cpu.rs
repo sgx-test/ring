@@ -24,38 +24,38 @@ pub(crate) struct Features(());
 
 #[inline(always)]
 pub(crate) fn features() -> Features {
-    // We don't do runtime feature detection on aarch64-apple-* as all AAarch64
-    // features we use are available on every device since the first devices.
-    #[cfg(any(
-        target_arch = "x86",
-        target_arch = "x86_64",
-        all(
-            any(target_arch = "aarch64", target_arch = "arm"),
-            any(target_os = "android", target_os = "fuchsia", target_os = "linux")
-        )
-    ))]
-    {
-        static INIT: spin::Once<()> = spin::Once::new();
-        let () = INIT.call_once(|| {
-            #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-            {
-                extern "C" {
-                    fn GFp_cpuid_setup();
-                }
-                unsafe {
-                    GFp_cpuid_setup();
-                }
-            }
-
-            #[cfg(all(
-                any(target_arch = "aarch64", target_arch = "arm"),
-                any(target_os = "android", target_os = "fuchsia", target_os = "linux")
-            ))]
-            {
-                arm::setup();
-            }
-        });
-    }
+    // // We don't do runtime feature detection on aarch64-apple-* as all AAarch64
+    // // features we use are available on every device since the first devices.
+    // #[cfg(any(
+    //     target_arch = "x86",
+    //     target_arch = "x86_64",
+    //     all(
+    //         any(target_arch = "aarch64", target_arch = "arm"),
+    //         any(target_os = "android", target_os = "fuchsia", target_os = "linux")
+    //     )
+    // ))]
+    // {
+    //     static INIT: spin::Once<()> = spin::Once::new();
+    //     let () = INIT.call_once(|| {
+    //         #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+    //         {
+    //             extern "C" {
+    //                 fn GFp_cpuid_setup();
+    //             }
+    //             unsafe {
+    //                 GFp_cpuid_setup();
+    //             }
+    //         }
+    //
+    //         #[cfg(all(
+    //             any(target_arch = "aarch64", target_arch = "arm"),
+    //             any(target_os = "android", target_os = "fuchsia", target_os = "linux")
+    //         ))]
+    //         {
+    //             arm::setup();
+    //         }
+    //     });
+    // }
 
     Features(())
 }
